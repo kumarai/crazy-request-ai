@@ -1,0 +1,263 @@
+[
+  {
+    "title": "When does a one-time payment post to the account",
+    "article_id": "TEL-PAY-001",
+    "category": "payments",
+    "product": "billing",
+    "summary": "Explain how quickly a one-time payment made through chat, app, or web reflects on the customer balance and what can delay posting.",
+    "symptoms": [
+      "customer paid but still sees past-due",
+      "payment confirmation received but balance not updated"
+    ],
+    "common_causes": [
+      "card authorization held for up to 15 minutes before posting",
+      "bank transfer (ACH) takes 1-3 business days to clear",
+      "payment submitted after daily cutoff at 11:59 PM ET"
+    ],
+    "resolution_steps": [
+      "Confirm the payment method — card payments post within 15 minutes; bank transfers take 1-3 business days.",
+      "Check the email or in-app confirmation for the payment reference number.",
+      "If more than 3 business days have passed without posting, capture the reference number and escalate.",
+      "Reassure the customer that late fees will be reversed automatically once the payment posts within the expected window."
+    ],
+    "escalation_policy": "Escalate to the payments operations team if an ACH payment has not posted after 3 business days.",
+    "keywords": [
+      "payment not showing",
+      "when does my payment post",
+      "balance not updated",
+      "autopay timing"
+    ]
+  },
+  {
+    "title": "Enrolling in autopay — eligibility and first-draft timing",
+    "article_id": "TEL-PAY-002",
+    "category": "autopay",
+    "product": "billing",
+    "summary": "What customers should expect when they enroll in autopay, including eligibility, the first-draft cycle, and payment method rules.",
+    "symptoms": [
+      "customer wants to enroll in autopay",
+      "asks when the first autopay charge will happen",
+      "asks whether autopay gives a discount"
+    ],
+    "common_causes": [
+      "customer has a past-due balance that must be cleared before enrollment",
+      "customer has no saved payment method",
+      "enrollment happens too close to the next bill cycle to apply this month"
+    ],
+    "resolution_steps": [
+      "Confirm the account has no past-due balance; autopay cannot be enabled while past-due is > $0.",
+      "Verify at least one saved payment method (card or bank) is on file.",
+      "Explain that autopay drafts 5 days before the bill due date; enrollment at least 7 days before the next due date guarantees it applies that cycle.",
+      "Mention the $5 autopay credit applies starting the FIRST successfully drafted cycle, not the enrollment cycle.",
+      "Use propose_autopay to surface the confirmation button; only the click enrolls."
+    ],
+    "escalation_policy": "Escalate to billing operations if the customer has cleared their past-due balance but the system blocks autopay enrollment.",
+    "keywords": [
+      "autopay enrollment",
+      "autopay discount",
+      "first autopay draft",
+      "autopay eligibility"
+    ]
+  },
+  {
+    "title": "Split-payment across two cards or bank accounts",
+    "article_id": "TEL-PAY-003",
+    "category": "payments",
+    "product": "billing",
+    "summary": "Rules for splitting a single bill across multiple payment methods in one session.",
+    "symptoms": [
+      "customer wants to pay with two different cards",
+      "asks if a partial payment is allowed"
+    ],
+    "common_causes": [
+      "customer hit per-card daily limit",
+      "customer wants to pay some now and the rest after payday"
+    ],
+    "resolution_steps": [
+      "Confirm that partial (under-balance) one-time payments ARE allowed — any positive amount up to the total balance.",
+      "Explain that the chat supports ONE payment per propose_payment; to split, make two separate payments in the same conversation.",
+      "Walk through the amount for the first card, propose_payment, confirm, then repeat for the second card.",
+      "Remind the customer that a partial payment does not cancel late-fee eligibility — they must clear the full past-due amount to avoid the next fee."
+    ],
+    "escalation_policy": "Escalate to billing if a customer needs a formal payment arrangement for an amount larger than their balance.",
+    "keywords": [
+      "split payment",
+      "partial payment",
+      "pay with two cards",
+      "pay part now"
+    ]
+  },
+  {
+    "title": "Payment methods we accept and daily limits",
+    "article_id": "TEL-PAY-004",
+    "category": "payment_methods",
+    "product": "billing",
+    "summary": "Accepted payment method types and per-method daily limits.",
+    "symptoms": [
+      "customer asks which cards are accepted",
+      "customer's payment was declined"
+    ],
+    "common_causes": [
+      "customer tried a prepaid card with insufficient funds",
+      "customer exceeded the $2,500 daily card limit",
+      "customer tried a foreign card without USD billing address"
+    ],
+    "resolution_steps": [
+      "Confirm accepted types: Visa, Mastercard, American Express, Discover, US-issued debit cards, and US bank-account ACH transfers.",
+      "Explain the $2,500 daily limit per card and the $10,000 daily limit per bank account.",
+      "If the card was declined, ask the customer to verify billing address and CVV, or switch to a bank account for larger amounts.",
+      "Do NOT accept prepaid cards, gift cards, or non-US-issued cards."
+    ],
+    "escalation_policy": "Escalate to fraud-ops if a card is repeatedly declined and the customer asserts the bank approved the charge.",
+    "keywords": [
+      "accepted cards",
+      "payment declined",
+      "daily payment limit",
+      "card types"
+    ]
+  },
+  {
+    "title": "Refund windows and timing for overpayments",
+    "article_id": "TEL-PAY-005",
+    "category": "refunds",
+    "product": "billing",
+    "summary": "When and how an overpayment is refunded back to the original payment method.",
+    "symptoms": [
+      "customer accidentally paid twice",
+      "customer paid more than their balance and wants the difference back"
+    ],
+    "common_causes": [
+      "duplicate payment submitted within the same day",
+      "autopay draft ran the same day as a manual payment"
+    ],
+    "resolution_steps": [
+      "Confirm the overpayment amount by comparing billing_list_charges to the current balance.",
+      "Explain default behavior: overpayments are applied as an account credit toward the NEXT bill.",
+      "If the customer wants the money returned to the card instead, note it takes 5-7 business days to post back to the original payment method.",
+      "For amounts under $25, do NOT issue a refund to the card — the bank processing fee usually exceeds the refund; keep as account credit.",
+      "Escalate to billing-ops to initiate the return-to-card refund when over $25."
+    ],
+    "escalation_policy": "Escalate to billing operations for any refund-to-card request over $25.",
+    "keywords": [
+      "overpayment",
+      "duplicate payment",
+      "refund to card",
+      "credit on account"
+    ]
+  },
+  {
+    "title": "Late fees and fee-waiver eligibility",
+    "article_id": "TEL-PAY-006",
+    "category": "fees",
+    "product": "billing",
+    "summary": "When late fees apply and the policy for waiving a late fee as a courtesy.",
+    "symptoms": [
+      "customer disputes a $10 late fee",
+      "customer asks to waive a fee"
+    ],
+    "common_causes": [
+      "bill went unpaid past the due date",
+      "autopay drafted but the bank returned insufficient funds"
+    ],
+    "resolution_steps": [
+      "Confirm the fee amount: $10 standard late fee applied 5 days after the due date.",
+      "Check billing_list_charges for the customer's payment history over the last 12 months.",
+      "Waiver eligibility: the account must have no more than ONE waived late fee in the prior 12 months and must be otherwise in good standing.",
+      "If eligible, confirm the waiver in text; do NOT claim the waiver is applied. Waivers require billing-ops approval — escalate using the escalation contact.",
+      "Encourage autopay enrollment to avoid future late fees (propose_autopay if they have a payment method on file)."
+    ],
+    "escalation_policy": "Fee waivers always route through billing operations; the agent cannot apply waivers directly.",
+    "keywords": [
+      "late fee",
+      "waive fee",
+      "fee dispute",
+      "forgive late fee"
+    ]
+  },
+  {
+    "title": "Setting a new default payment method",
+    "article_id": "TEL-PAY-007",
+    "category": "payment_methods",
+    "product": "billing",
+    "summary": "How the default payment method is used and what changing it does to autopay.",
+    "symptoms": [
+      "customer added a new card and wants autopay to use it",
+      "customer asks which card is being charged"
+    ],
+    "common_causes": [
+      "customer added a new card without updating autopay",
+      "customer cancelled the old card"
+    ],
+    "resolution_steps": [
+      "Call payment_method_list to identify the current default (is_default: true).",
+      "Confirm with the customer which method should be the new default.",
+      "Use propose_payment_method_set_default with the target payment_method_id — the click-through updates both the default flag and the autopay source if enrolled.",
+      "Explain that the change takes effect for the NEXT autopay draft; any draft already scheduled in the next 24 hours uses the previous method."
+    ],
+    "escalation_policy": "Escalate to billing-ops if a default change fails repeatedly.",
+    "keywords": [
+      "default card",
+      "change autopay source",
+      "set default payment",
+      "which card is used"
+    ]
+  },
+  {
+    "title": "Autopay draft failed — insufficient funds or declined card",
+    "article_id": "TEL-PAY-008",
+    "category": "autopay",
+    "product": "billing",
+    "summary": "What happens when the autopay draft fails and how the account recovers.",
+    "symptoms": [
+      "customer got a text that their autopay failed",
+      "account is now past-due after autopay date"
+    ],
+    "common_causes": [
+      "insufficient funds in the bank account",
+      "card expired",
+      "bank flagged the charge as fraud"
+    ],
+    "resolution_steps": [
+      "Look up the current balance via billing_get_balance to confirm the failure.",
+      "Ask the customer to verify the payment method on file (payment_method_list) and update if the card is expired.",
+      "Offer to make a one-time payment now (propose_payment) to clear the past-due balance.",
+      "Explain that a single failed autopay does NOT un-enroll the customer — autopay will retry on the next cycle using the same method unless the customer switches it.",
+      "Three consecutive failures auto-suspend autopay; in that case recommend re-enrolling with a different method after the current balance is cleared."
+    ],
+    "escalation_policy": "Escalate to billing operations if the customer's autopay has been auto-suspended after 3 failures.",
+    "keywords": [
+      "autopay failed",
+      "autopay declined",
+      "card expired autopay",
+      "reactivate autopay"
+    ]
+  },
+  {
+    "title": "How autopay credit and paperless-billing credit combine",
+    "article_id": "TEL-PAY-009",
+    "category": "credits",
+    "product": "billing",
+    "summary": "Which customer-facing credits stack and how they appear on the bill.",
+    "symptoms": [
+      "customer asks why they aren't getting the $10 credit they expected",
+      "customer wants to know if discounts stack"
+    ],
+    "common_causes": [
+      "customer enrolled in autopay but not paperless billing",
+      "customer is using a bank account (qualifies for full credit) vs. a card (partial)"
+    ],
+    "resolution_steps": [
+      "Confirm the rules: autopay credit is $5/month when paid by bank account, $3/month when paid by card. Paperless-billing credit is $5/month.",
+      "Both credits can stack — maximum combined credit is $10/month when using bank + paperless.",
+      "Credits appear as a line item on the bill AFTER the first successful autopay draft and the first paperless-delivered statement.",
+      "If a customer expected a credit but doesn't see it, confirm both enrollments are active and that at least one successful autopay cycle has completed."
+    ],
+    "escalation_policy": "Escalate to billing-ops if both enrollments are active for more than one full cycle but the credit has not posted.",
+    "keywords": [
+      "autopay credit",
+      "paperless credit",
+      "bill discount",
+      "stacking discounts"
+    ]
+  }
+]

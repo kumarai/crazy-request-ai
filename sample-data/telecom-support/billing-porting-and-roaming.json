@@ -1,0 +1,117 @@
+[
+  {
+    "title": "Port-in delayed because account details do not match",
+    "article_id": "TEL-BIL-001",
+    "category": "porting",
+    "product": "consumer wireless",
+    "summary": "Resolve a mobile number transfer that is delayed because the losing carrier rejected the request due to account number, transfer PIN, or ZIP code mismatch.",
+    "symptoms": [
+      "customer says transfer is stuck pending",
+      "temporary number still active",
+      "port status tool shows mismatch or rejection"
+    ],
+    "common_causes": [
+      "wrong account number",
+      "incorrect transfer PIN or Number Transfer PIN",
+      "billing ZIP does not match the losing carrier record",
+      "old provider line is already disconnected"
+    ],
+    "resolution_steps": [
+      "Verify the account number exactly as shown on the prior carrier bill or app.",
+      "Regenerate the transfer PIN from the losing carrier if the existing PIN may have expired.",
+      "Confirm the billing ZIP code and account holder name are an exact match.",
+      "Resubmit the port request and monitor the status tool for a fresh response.",
+      "Keep the old line active until the port completes."
+    ],
+    "escalation_policy": "Escalate to the porting team if the request remains rejected after the customer verifies all losing-carrier credentials.",
+    "keywords": [
+      "number transfer",
+      "port stuck",
+      "transfer PIN",
+      "account mismatch",
+      "temporary number"
+    ],
+    "related_articles": [
+      "Phone shows SOS only after SIM swap",
+      "Short code and OTP texts are not arriving"
+    ],
+    "updated_at": "2026-02-09"
+  },
+  {
+    "title": "Line suspended because of past-due balance",
+    "article_id": "TEL-BIL-002",
+    "category": "billing",
+    "product": "consumer wireless",
+    "summary": "Help a customer restore service after a non-pay suspension while clarifying minimum payment, reconnection timing, and partial payment rules.",
+    "symptoms": [
+      "outbound calls blocked",
+      "data suspended",
+      "billing portal shows past due",
+      "line status shows soft suspension"
+    ],
+    "common_causes": [
+      "autopay failed",
+      "recent card expiration",
+      "bank returned the payment",
+      "promise-to-pay expired"
+    ],
+    "resolution_steps": [
+      "Review the account balance, failed payments, and the minimum amount required to restore service.",
+      "Take a payment or direct the customer to self-service billing.",
+      "Advise that reconnection can take up to 30 minutes after successful payment posting.",
+      "Have the customer restart the device once payment is reflected.",
+      "If autopay failed, update the payment method to prevent repeat suspensions."
+    ],
+    "escalation_policy": "Escalate to billing support if the account remains suspended after payment posts and line status does not refresh.",
+    "keywords": [
+      "service suspended",
+      "past due balance",
+      "reconnect line",
+      "billing block",
+      "autopay failed"
+    ],
+    "related_articles": [
+      "Voicemail PIN reset for mobile subscribers",
+      "Port-in delayed because account details do not match"
+    ],
+    "updated_at": "2026-03-12"
+  },
+  {
+    "title": "Unexpected international roaming charges on the invoice",
+    "article_id": "TEL-BIL-003",
+    "category": "billing",
+    "product": "consumer wireless",
+    "summary": "Review roaming usage disputes and explain the difference between roaming passes, pay-per-use charges, and maritime or satellite usage exclusions.",
+    "symptoms": [
+      "bill increased after overseas travel",
+      "customer expected roaming pass coverage",
+      "charges mention cruise ship or satellite network"
+    ],
+    "common_causes": [
+      "roaming pass was not active on all travel days",
+      "usage occurred on a non-covered maritime or airline network",
+      "device used background data before the pass started",
+      "secondary line on dual-SIM device generated the charges"
+    ],
+    "resolution_steps": [
+      "Review the invoice detail and identify the visited network and usage dates.",
+      "Check whether a roaming pass was active and when it started.",
+      "Explain any exclusions for maritime, satellite, or in-flight networks.",
+      "If the dispute appears valid, submit a billing review with the account notes and travel dates.",
+      "Recommend disabling background data or turning off the unused SIM before the next trip."
+    ],
+    "escalation_policy": "Escalate to billing review when invoice details conflict with the active roaming pass coverage window.",
+    "keywords": [
+      "roaming charges",
+      "travel bill",
+      "international invoice",
+      "maritime network",
+      "billing dispute"
+    ],
+    "related_articles": [
+      "International roaming enabled but data will not connect",
+      "Line suspended because of past-due balance"
+    ],
+    "updated_at": "2026-03-21"
+  }
+]

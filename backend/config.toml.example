@@ -1,0 +1,168 @@
+# ============================================================
+# Database
+# ============================================================
+database_url = "postgresql://app:changeme@postgres:5432/devknowledge"
+database_pool_min = 2
+database_pool_max = 15
+database_echo = false
+
+# ============================================================
+# Redis (all on DB 0 to match GCP Memorystore which only has DB 0)
+# ============================================================
+redis_url = "redis://redis:6379/0"
+redis_cluster = false                           # set true for GCP Memorystore Cluster
+
+# ============================================================
+# Celery (key isolation via Celery's built-in key prefixes)
+# ============================================================
+celery_broker_url = "redis://redis:6379/0"
+celery_result_backend = "redis://redis:6379/0"
+
+# ============================================================
+# LLM Provider  —  "openai" | "anthropic" | "google" | "ollama"
+#
+# Switch between providers by changing llm_provider.
+# Model names are auto-resolved per provider. You can also
+# switch at runtime via PUT /v1/settings/llm or the UI dropdown.
+# ============================================================
+llm_provider = "openai"
+
+# ============================================================
+# OpenAI
+# ============================================================
+openai_api_key = ""                             # env: OPENAI_API_KEY
+
+# ============================================================
+# Anthropic  (only needed when llm_provider = "anthropic")
+# ============================================================
+anthropic_api_key = ""                          # env: ANTHROPIC_API_KEY
+
+# ============================================================
+# Google Vertex AI / Google AI
+# For Vertex AI: set google_project_id + google_location
+# For Google AI: set google_api_key
+# ============================================================
+google_project_id = ""
+google_location = "us-central1"
+google_api_key = ""                             # env: GOOGLE_API_KEY
+
+# ============================================================
+# Ollama  —  free, great for testing (local or remote)
+#
+# Local setup:
+#   1. Install:  curl -fsSL https://ollama.com/install.sh | sh
+#   2. Pull:  ollama pull llama3.1:8b && ollama pull nomic-embed-text-v2-moe
+#   3. ollama_base_url = "http://localhost:11434/v1"
+#
+# Remote (behind Cloudflare / reverse proxy with auth):
+#   ollama_base_url = "https://ollama.yourdomain.com/v1"
+#   ollama_api_key  = "your-bearer-token"
+#
+# Note: embedding dimensions for nomic-embed-text-v2-moe = 768.
+# Update llm_embedding_dimensions accordingly if you switch.
+# ============================================================
+ollama_base_url = "https://ollama.yourdomain.com/v1"        # env: OLLAMA_BASE_URL
+ollama_api_key  = ""                                        # env: OLLAMA_API_KEY
+
+# ============================================================
+# Embedding dimensions (must match the embedding model)
+#   OpenAI text-embedding-3-small = 1536
+#   Ollama nomic-embed-text-v2-moe = 768
+#   Google text-embedding-004     = 768
+# ============================================================
+llm_embedding_dimensions = 1536
+
+# ============================================================
+# Object Storage (file uploads)  —  "s3" (MinIO/S3) or "gcs"
+# ============================================================
+storage_provider = "s3"
+storage_endpoint = "http://minio:9000"              # internal (backend → MinIO)
+storage_public_endpoint = "http://localhost:9000"    # browser-reachable (for presigned URLs)
+storage_access_key = "minioadmin"
+storage_secret_key = "minioadmin"
+storage_bucket = "devknowledge"
+storage_region = "us-east-1"
+# For GCS: set storage_provider = "gcs" and optionally:
+# gcs_credentials_json = '{"type":"service_account",...}'
+
+# ============================================================
+# Security
+# ============================================================
+# Fernet key — generate with:
+#   python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+security_encryption_key = ""
+security_api_keys = []                          # query + read-only access
+security_admin_api_keys = []                    # mutation access (also grants query)
+security_rate_limit_per_minute = 60
+
+# ============================================================
+# RAG retrieval tuning
+# ============================================================
+rag_scope_threshold = 0.35
+rag_vector_candidates = 40
+rag_bm25_candidates = 40
+rag_expansion_queries = 4
+rag_top_k_after_fusion = 20
+rag_top_k_final = 8
+
+# ============================================================
+# IVFFlat index (pgvector)
+# ============================================================
+ivfflat_probes = 10
+ivfflat_lists = 100
+
+# ============================================================
+# Indexing
+# ============================================================
+indexing_repos_base_dir = "/repos"
+indexing_generic_allowed_roots = ["/data"]
+indexing_sync_schedule_cron = "0 2 * * *"       # global fallback; per-source schedules below override
+
+# ============================================================
+# Repositories
+# credential_id references a row in the credentials table.
+# Create via POST /v1/credentials first, then paste the UUID here.
+# ============================================================
+[[repositories]]
+repository_url = "https://gitlab.com/org/payments-service"
+directory = ["*"]
+is_internal = true
+credential_id = ""
+branch = "main"
+wiki_enabled = true
+schedule = "0 2 * * *"
+
+[[repositories]]
+repository_url = "https://gitlab.com/org/ehr-service"
+directory = ["src", "lib", "!tests", "!node_modules"]
+is_internal = true
+credential_id = ""
+branch = "main"
+wiki_enabled = true
+schedule = "0 3 * * *"
+
+[[repositories]]
+repository_url = "https://github.com/org/shared-utils"
+directory = ["src"]
+is_internal = false
+credential_id = ""
+branch = "main"
+wiki_enabled = false
+schedule = "0 4 * * *"
+
+# ============================================================
+# Generic sources (support articles, API docs, etc.)
+# ============================================================
+[[generic_sources]]
+name = "support-articles"
+source_type = "support"
+path = "/data/support-articles"
+credential_id = ""
+schedule = "0 5 * * *"
+
+[[generic_sources]]
+name = "api-docs"
+source_type = "api_docs"
+path = "/data/openapi.json"
+credential_id = ""
+schedule = "0 5 * * *"

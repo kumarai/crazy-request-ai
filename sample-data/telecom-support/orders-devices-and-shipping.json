@@ -1,0 +1,235 @@
+[
+  {
+    "title": "Return window and restocking fees for devices",
+    "article_id": "TEL-ORD-001",
+    "category": "returns",
+    "product": "orders",
+    "summary": "The standard return window, what qualifies for a full refund, and when a restocking fee applies.",
+    "symptoms": [
+      "customer wants to return a phone they just received",
+      "asks whether they can still return after 14 days"
+    ],
+    "common_causes": [
+      "device does not meet customer expectations",
+      "customer received a different color or storage option than ordered",
+      "customer found a better promo after ordering"
+    ],
+    "resolution_steps": [
+      "Confirm the return window: 14 days from the DELIVERY date, not the order date.",
+      "Full refund is available when the device is in original condition, in the original box, with all accessories and proof of purchase.",
+      "A 10% restocking fee applies when the box is opened but the device is otherwise unused. A 20% restocking fee applies if the device shows any wear.",
+      "Devices with activated SIMs or transferred phone numbers must be deactivated before return — refer the customer to the technical specialist to port out.",
+      "Provide the return label via the escalation contact; the agent does NOT generate return labels directly."
+    ],
+    "escalation_policy": "Escalate to orders-ops when the customer is outside the 14-day window or wants a restocking fee waiver.",
+    "keywords": [
+      "return policy",
+      "restocking fee",
+      "14 days return",
+      "send back phone"
+    ]
+  },
+  {
+    "title": "Shipping SLAs and expedited shipping options",
+    "article_id": "TEL-ORD-002",
+    "category": "shipping",
+    "product": "orders",
+    "summary": "Standard and expedited shipping windows, carrier selection, and delivery guarantees.",
+    "symptoms": [
+      "customer asks when their order will arrive",
+      "customer wants faster shipping"
+    ],
+    "common_causes": [
+      "customer placed a standard order but needs the device sooner",
+      "customer lives in a remote area and wants a realistic ETA"
+    ],
+    "resolution_steps": [
+      "Standard shipping: free, 3-5 business days via UPS Ground. Eligible for orders placed before 2 PM ET on a business day.",
+      "Expedited shipping: $15 flat, 1-2 business days via UPS Next Day Air. Must be selected at checkout; cannot be upgraded after the order is placed.",
+      "Orders placed on Saturday, Sunday, or a US federal holiday ship the next business day.",
+      "Alaska, Hawaii, and US territories: add 2-3 business days to standard; expedited is 2-3 business days and costs $25.",
+      "PO boxes and APO/FPO addresses: UPS cannot deliver; fall back to USPS Priority Mail (3-7 business days)."
+    ],
+    "escalation_policy": "Escalate to orders-ops if a tracked shipment is more than 2 business days past the ETA.",
+    "keywords": [
+      "shipping time",
+      "expedited shipping",
+      "when will it arrive",
+      "shipping to Hawaii"
+    ]
+  },
+  {
+    "title": "Activation requirements when ordering a new device",
+    "article_id": "TEL-ORD-003",
+    "category": "activation",
+    "product": "orders",
+    "summary": "Which new-device orders require service activation and how activation timing works.",
+    "symptoms": [
+      "customer ordered a phone — asks how to activate",
+      "customer wants to order a phone to use on another carrier"
+    ],
+    "common_causes": [
+      "new customer ordering both a device and a line of service",
+      "existing customer upgrading their phone on an existing line",
+      "customer intends to use the device unlocked on a different carrier"
+    ],
+    "resolution_steps": [
+      "New-customer orders (device + new line): activation happens at first boot via the on-screen eSIM prompt; no additional step needed.",
+      "Upgrade orders (device on existing line): the SIM transfer happens automatically when the new device powers on with the existing account's eSIM profile. The old device is deactivated within 24 hours.",
+      "Unlocked/BYO-carrier orders: the device ships with NO carrier lock. The customer is responsible for activation on their own carrier — do NOT promise any activation support beyond this.",
+      "Warn the customer that attempting activation before the order's status is 'delivered' may fail — wait for delivery confirmation."
+    ],
+    "escalation_policy": "Escalate to technical specialist for eSIM activation issues once the device is delivered but not activating.",
+    "keywords": [
+      "activate new phone",
+      "eSIM activation",
+      "unlocked phone",
+      "upgrade activation"
+    ]
+  },
+  {
+    "title": "Device compatibility — which plans work with which devices",
+    "article_id": "TEL-ORD-004",
+    "category": "compatibility",
+    "product": "orders",
+    "summary": "Which devices work on which network bands, 5G capability, and plan-level restrictions.",
+    "symptoms": [
+      "customer asks if their existing phone will work on our network",
+      "customer wants 5G but is on a plan that doesn't include it"
+    ],
+    "common_causes": [
+      "customer has an older phone without modern network bands",
+      "customer is on a legacy plan that doesn't include 5G service"
+    ],
+    "resolution_steps": [
+      "All devices in the current catalog are compatible with our network across all plans — do not doubt compatibility of a catalog device.",
+      "For customer-owned (BYO) devices, check the IMEI via the BYO device checker tool (handled by the technical specialist) — orders specialist does not have this lookup.",
+      "5G service requires: (1) a 5G-capable device, (2) a 5G-enabled plan (Ultimate Bundle, 5G Unlimited Mobile, or Gigabit Pro), and (3) coverage in the customer's area.",
+      "Plans that include 5G: all current catalog plans. Legacy plans without 5G: 'Basic Talk & Text' and 'Unlimited 4G' — recommend a plan upgrade (via the sales flow) if 5G is desired."
+    ],
+    "escalation_policy": "Hand off to technical specialist for BYO compatibility checks against IMEI.",
+    "keywords": [
+      "device compatibility",
+      "will my phone work",
+      "5G device",
+      "BYO phone"
+    ]
+  },
+  {
+    "title": "Order status meanings and tracking updates",
+    "article_id": "TEL-ORD-005",
+    "category": "status",
+    "product": "orders",
+    "summary": "What each order status means and how tracking progresses.",
+    "symptoms": [
+      "customer wants to know what 'placed' vs 'shipped' means",
+      "customer sees no tracking update after 48 hours"
+    ],
+    "common_causes": [
+      "order is still in the warehouse queue",
+      "carrier scan happened but tracking portal is delayed"
+    ],
+    "resolution_steps": [
+      "Order statuses: 'placed' (payment confirmed, not yet in the warehouse), 'shipped' (carrier has a tracking number and scan), 'delivered' (carrier marked delivered), 'cancelled'.",
+      "Call order_shipment_status to fetch the current carrier + tracking number when available.",
+      "Expect 12-48 hours between 'placed' and 'shipped'; tracking numbers appear on the label stage, not at order creation.",
+      "If tracking has had no scan for more than 48 hours since 'shipped', escalate to orders-ops — this is a lost shipment signal.",
+      "Never invent an ETA; always cite the value the order_get tool returned."
+    ],
+    "escalation_policy": "Escalate to orders-ops for no-scan shipments > 48 hours past the 'shipped' status.",
+    "keywords": [
+      "order status",
+      "tracking number",
+      "no update on shipping",
+      "shipment stuck"
+    ]
+  },
+  {
+    "title": "Cancel or modify an order after placement",
+    "article_id": "TEL-ORD-006",
+    "category": "cancellations",
+    "product": "orders",
+    "summary": "Window in which an order can be cancelled or modified, and what happens to the payment.",
+    "symptoms": [
+      "customer placed the wrong item and wants to change",
+      "customer wants to cancel an order they just placed"
+    ],
+    "common_causes": [
+      "customer picked the wrong color/storage/SKU",
+      "customer found a better deal",
+      "customer's plans changed"
+    ],
+    "resolution_steps": [
+      "An order can be cancelled any time while status is 'placed'. Once 'shipped', it CANNOT be cancelled — it must be returned using the return policy once delivered.",
+      "Look up the order with order_get to confirm current status.",
+      "If still 'placed', use propose_cancel_order; the customer click performs the actual cancellation.",
+      "Order modifications (changing SKU, address, payment method) are NOT supported — cancel and re-place is the only path.",
+      "Refunds for cancelled orders: card payments reverse within 5 business days; bank ACH reverses within 7-10 business days."
+    ],
+    "escalation_policy": "Escalate to orders-ops if an address change is needed on an already-shipped order — they can redirect via the carrier.",
+    "keywords": [
+      "cancel my order",
+      "change my order",
+      "wrong item ordered",
+      "stop my order"
+    ]
+  },
+  {
+    "title": "Taxes, fees, and eligibility for in-cart promotions",
+    "article_id": "TEL-ORD-007",
+    "category": "pricing",
+    "product": "orders",
+    "summary": "What's included in the quoted total and which promos apply in-chat vs. web checkout only.",
+    "symptoms": [
+      "customer asks why the quote is higher than the sticker price",
+      "customer saw a promo on the website that doesn't appear in chat"
+    ],
+    "common_causes": [
+      "sales tax varies by ship-to state",
+      "web-exclusive trade-in and bundle promos don't apply in chat-based orders"
+    ],
+    "resolution_steps": [
+      "Always call order_quote to get the authoritative total — it includes item subtotal, state sales tax (flat 8.75% in dev fixtures), and applicable fees.",
+      "Shipping is free for standard on orders over $35; $5 flat under $35. Expedited is $15 regardless of total.",
+      "Trade-in and device-finance promos are handled only through web checkout — explain this to the customer and point them to the self-service catalog URL via the escalation contact if they need those specific promos.",
+      "Bundle-with-a-plan promos work through in-chat ordering; single-device purchase at retail price is what the order specialist quotes by default."
+    ],
+    "escalation_policy": "Point the customer to web checkout (via escalation contact) for trade-in or device-finance promos.",
+    "keywords": [
+      "tax on order",
+      "web-only promo",
+      "trade-in value",
+      "why is my quote higher"
+    ]
+  },
+  {
+    "title": "Lost or damaged shipment — what to do",
+    "article_id": "TEL-ORD-008",
+    "category": "shipping",
+    "product": "orders",
+    "summary": "Process for filing a claim on a lost or damaged shipment.",
+    "symptoms": [
+      "customer's tracking says 'delivered' but they never received it",
+      "customer received a damaged box"
+    ],
+    "common_causes": [
+      "carrier delivered to the wrong address",
+      "package stolen after delivery (porch theft)",
+      "package sustained damage in transit"
+    ],
+    "resolution_steps": [
+      "Confirm the tracking status with order_shipment_status; note the 'delivered' scan time.",
+      "For 'delivered but not received': a claim can be filed if the customer notifies us within 5 days of the scan. After 5 days, the carrier claim window closes.",
+      "For damaged shipments: customer must take photos of the box + device before returning. Damage claims filed within 7 days of delivery qualify for a free replacement.",
+      "The agent does NOT file the claim directly — provide the escalation contact for orders-ops to handle the claim intake.",
+      "Offer to propose_cancel_order ONLY if the order is still in 'placed' status — otherwise, the return/claim path is the right one."
+    ],
+    "escalation_policy": "All lost/damaged claims go through orders-ops; provide the escalation contact.",
+    "keywords": [
+      "lost package",
+      "damaged shipment",
+      "porch theft",
+      "never received order"
+    ]
+  }
+]

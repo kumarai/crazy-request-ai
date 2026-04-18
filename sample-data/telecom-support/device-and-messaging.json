@@ -1,0 +1,153 @@
+[
+  {
+    "title": "Activate eSIM on iPhone with QR code",
+    "article_id": "TEL-DEV-001",
+    "category": "device-setup",
+    "product": "consumer wireless",
+    "summary": "Guide for activating a new or replacement iPhone with an eSIM QR code or manual SM-DP+ address entry.",
+    "symptoms": [
+      "customer is moving from physical SIM to eSIM",
+      "camera cannot scan the QR code",
+      "activation says plan cannot be added"
+    ],
+    "common_causes": [
+      "old cellular plan is still installed",
+      "the QR code was already consumed",
+      "device is not connected to Wi-Fi during setup",
+      "the line is not ready for eSIM issuance"
+    ],
+    "resolution_steps": [
+      "Connect the iPhone to Wi-Fi before starting eSIM setup.",
+      "Remove inactive or duplicate cellular plans under Settings > Cellular.",
+      "Scan the QR code or use manual entry for SM-DP+ and activation code if scanning fails.",
+      "Wait up to 10 minutes for activation, then restart the phone once.",
+      "If activation is still pending, generate a fresh eSIM profile and resend the QR code."
+    ],
+    "escalation_policy": "Escalate to activation support if multiple fresh QR codes fail on a supported, unlocked iPhone.",
+    "keywords": [
+      "eSIM activation",
+      "QR code",
+      "iPhone setup",
+      "SM-DP+",
+      "replacement device"
+    ],
+    "related_articles": [
+      "Phone shows SOS only after SIM swap",
+      "Wi-Fi calling unavailable after handset upgrade"
+    ],
+    "updated_at": "2026-02-02"
+  },
+  {
+    "title": "MMS messages fail on Android after APN changes",
+    "article_id": "TEL-DEV-002",
+    "category": "messaging",
+    "product": "consumer wireless",
+    "summary": "Troubleshoot picture messages that stop sending or downloading on Android after APN edits, carrier switching apps, or device restores.",
+    "symptoms": [
+      "text messages work but pictures fail",
+      "messages show downloading and never complete",
+      "group MMS messages do not arrive"
+    ],
+    "common_causes": [
+      "MMSC or MMS proxy fields are wrong",
+      "mobile data is disabled",
+      "preferred APN switched to a non-carrier profile",
+      "RCS fallback is misconfigured"
+    ],
+    "resolution_steps": [
+      "Confirm mobile data is on and the account includes data service.",
+      "Reset APN settings to carrier default values and remove duplicate APNs.",
+      "Turn off Wi-Fi temporarily and retry sending a small image.",
+      "Clear cache for the messaging app, then reboot the device.",
+      "If MMS still fails, test with the carrier messaging app and verify MMSC values from the support matrix."
+    ],
+    "escalation_policy": "Escalate to device support if default APN values are correct and MMS fails across multiple messaging apps.",
+    "keywords": [
+      "MMS not sending",
+      "picture messages",
+      "group text",
+      "APN settings",
+      "Android messaging"
+    ],
+    "related_articles": [
+      "Activate eSIM on iPhone with QR code",
+      "Short code and OTP texts are not arriving"
+    ],
+    "updated_at": "2026-03-08"
+  },
+  {
+    "title": "Short code and OTP texts are not arriving",
+    "article_id": "TEL-DEV-003",
+    "category": "messaging",
+    "product": "consumer wireless",
+    "summary": "Support article for customers who can receive normal SMS but do not receive one-time passwords, bank codes, or other short code traffic.",
+    "symptoms": [
+      "bank verification texts never arrive",
+      "two-factor authentication codes are delayed",
+      "marketing short codes work on another line but not this one"
+    ],
+    "common_causes": [
+      "line has spam blocking or parental controls enabled",
+      "short code was previously opted out with STOP",
+      "enterprise sender has not provisioned the number correctly",
+      "recent port-in has not fully propagated through aggregators"
+    ],
+    "resolution_steps": [
+      "Check account-level spam filters, parental controls, and message blocking features.",
+      "Ask the customer to text START or UNSTOP if the sender supports re-enrollment.",
+      "Verify whether the line was ported in within the last 72 hours.",
+      "Test with multiple known short code senders to isolate the issue.",
+      "If only one sender fails, advise the customer to contact the sender to verify short code enrollment and number formatting."
+    ],
+    "escalation_policy": "Escalate to messaging operations only when the issue affects multiple short code providers after feature checks.",
+    "keywords": [
+      "OTP",
+      "2FA",
+      "short code",
+      "verification text",
+      "bank code"
+    ],
+    "related_articles": [
+      "MMS messages fail on Android after APN changes",
+      "Port-in delayed because account details do not match"
+    ],
+    "updated_at": "2026-01-30"
+  },
+  {
+    "title": "Voicemail PIN reset for mobile subscribers",
+    "article_id": "TEL-DEV-004",
+    "category": "voice-services",
+    "product": "consumer wireless",
+    "summary": "Reset a forgotten voicemail PIN or fix a mailbox lockout after too many invalid passcode attempts.",
+    "symptoms": [
+      "customer cannot access voicemail",
+      "mailbox says it is locked",
+      "visual voicemail prompts for a passcode that no longer works"
+    ],
+    "common_causes": [
+      "too many failed PIN attempts",
+      "line feature mismatch after plan migration",
+      "visual voicemail app cached an old password"
+    ],
+    "resolution_steps": [
+      "Reset the voicemail PIN from the account tools or the billing platform.",
+      "Have the customer dial into voicemail and set a new 4 to 7 digit PIN.",
+      "Force-close the visual voicemail app and refresh it after the new PIN is confirmed.",
+      "If voicemail greeting playback fails, reprovision the voicemail feature and wait 15 minutes.",
+      "Test visual voicemail sync once the mailbox is unlocked."
+    ],
+    "escalation_policy": "Escalate to voice platform support if mailbox reprovisioning fails or greeting storage is corrupted.",
+    "keywords": [
+      "voicemail PIN",
+      "mailbox locked",
+      "visual voicemail",
+      "forgot password",
+      "passcode reset"
+    ],
+    "related_articles": [
+      "Wi-Fi calling unavailable after handset upgrade",
+      "International roaming enabled but data will not connect"
+    ],
+    "updated_at": "2026-02-14"
+  }
+]

@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+# Install: cp hooks/post-commit .git/hooks/post-commit && chmod +x .git/hooks/post-commit
+# Required env: CELERY_BROKER_URL, SOURCE_ID
+import os
+import subprocess
+import sys
+
+broker = os.environ.get("CELERY_BROKER_URL")
+source_id = os.environ.get("SOURCE_ID")
+if not broker or not source_id:
+    sys.exit(0)
+
+changed = subprocess.run(
+    ["git", "diff-tree", "--no-commit-id", "-r", "--name-only", "HEAD"],
+    capture_output=True,
+    text=True,
+).stdout.strip().splitlines()
+
+from celery import Celery
+
+app = Celery(broker=broker)
+dispatched = 0
+for f in changed:
+    if f.endswith((".py", ".ts", ".tsx")):
+        app.send_task(
+            "tasks.index_tasks.reindex_file",
+            args=[f, source_id],
+            queue="indexing",
+        )
+        dispatched += 1
+print(f"[hook] dispatched {dispatched} reindex_file tasks")

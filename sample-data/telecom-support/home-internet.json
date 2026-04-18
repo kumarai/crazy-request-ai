@@ -1,0 +1,115 @@
+[
+  {
+    "title": "Fiber gateway shows red LOS light",
+    "article_id": "TEL-HOM-001",
+    "category": "home-internet",
+    "product": "fiber broadband",
+    "summary": "Troubleshoot a fiber modem or optical network terminal showing a red LOS light, blinking LOS alarm, or complete optical signal loss.",
+    "symptoms": [
+      "internet offline",
+      "LOS light is red or blinking",
+      "router Wi-Fi is up but WAN is down"
+    ],
+    "common_causes": [
+      "fiber patch cable is loose or bent",
+      "building outage",
+      "ONT power issue",
+      "optical signal level out of range"
+    ],
+    "resolution_steps": [
+      "Inspect the fiber patch cable and make sure it is not pinched, sharply bent, or partially unplugged.",
+      "Power cycle the ONT and gateway for 60 seconds.",
+      "Check the outage dashboard for the serving area.",
+      "If LOS stays red, schedule a field technician because customer-side resets do not restore optical light levels.",
+      "Advise the customer not to stare into the fiber port or clean connectors without approved tools."
+    ],
+    "escalation_policy": "Escalate to field operations when the LOS alarm persists after power cycling and outage checks.",
+    "keywords": [
+      "red LOS",
+      "fiber down",
+      "ONT alarm",
+      "optical signal loss",
+      "broadband outage"
+    ],
+    "related_articles": [
+      "Home internet speed drops every evening",
+      "Set bridge mode on managed gateway"
+    ],
+    "updated_at": "2026-01-19"
+  },
+  {
+    "title": "Home internet speed drops every evening",
+    "article_id": "TEL-HOM-002",
+    "category": "home-internet",
+    "product": "fiber broadband",
+    "summary": "Differentiate between Wi-Fi congestion inside the home and actual access network congestion when a customer reports evening slowdown.",
+    "symptoms": [
+      "speed is normal in the morning but slow at night",
+      "video calls buffer after 7 PM",
+      "wired tests are faster than Wi-Fi tests"
+    ],
+    "common_causes": [
+      "2.4 GHz congestion from neighboring apartments",
+      "mesh node backhaul saturation",
+      "peak-hour node congestion",
+      "background streaming or gaming on the local network"
+    ],
+    "resolution_steps": [
+      "Run separate wired and Wi-Fi speed tests to isolate LAN versus WAN performance.",
+      "Move high-bandwidth devices to 5 GHz or Ethernet where possible.",
+      "Reposition mesh nodes and reduce overlap with neighboring networks.",
+      "Review gateway diagnostics for channel congestion and packet loss during the affected window.",
+      "If wired performance is also degraded, open a network capacity ticket with timestamps and test results."
+    ],
+    "escalation_policy": "Escalate to broadband network operations only when wired speed tests confirm peak-hour degradation.",
+    "keywords": [
+      "slow internet at night",
+      "evening slowdown",
+      "Wi-Fi congestion",
+      "peak hour",
+      "speed test"
+    ],
+    "related_articles": [
+      "Fiber gateway shows red LOS light",
+      "Set bridge mode on managed gateway"
+    ],
+    "updated_at": "2026-02-25"
+  },
+  {
+    "title": "Set bridge mode on managed gateway",
+    "article_id": "TEL-HOM-003",
+    "category": "home-internet",
+    "product": "fiber broadband",
+    "summary": "Explain bridge mode for customers who want to use their own router, including what features stop working and how to avoid double NAT.",
+    "symptoms": [
+      "customer wants to use personal router",
+      "gaming console reports double NAT",
+      "VPN or port forwarding behaves inconsistently"
+    ],
+    "common_causes": [
+      "managed gateway is routing and NATing traffic",
+      "personal router is connected LAN-to-LAN instead of WAN-to-LAN",
+      "customer expects mesh features from both routers simultaneously"
+    ],
+    "resolution_steps": [
+      "Confirm the gateway model supports bridge or IP passthrough mode.",
+      "Enable bridge mode or IP passthrough according to the supported device workflow.",
+      "Move the customer router connection to the correct WAN port.",
+      "Explain that parental controls, integrated mesh, and some phone features may stop working on the managed gateway.",
+      "Reboot both devices after the mode change and verify the customer router receives the public IP."
+    ],
+    "escalation_policy": "Escalate to advanced broadband support if bridge mode is unsupported on the installed gateway or voice services depend on routed mode.",
+    "keywords": [
+      "bridge mode",
+      "IP passthrough",
+      "double NAT",
+      "own router",
+      "public IP"
+    ],
+    "related_articles": [
+      "Home internet speed drops every evening",
+      "Fiber gateway shows red LOS light"
+    ],
+    "updated_at": "2026-03-02"
+  }
+]

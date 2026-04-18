@@ -1,0 +1,155 @@
+[
+  {
+    "title": "Phone shows SOS only after SIM swap",
+    "article_id": "TEL-MOB-001",
+    "category": "mobile-network",
+    "product": "consumer wireless",
+    "summary": "Troubleshoot a line that shows SOS only, Emergency Calls Only, or No Service immediately after moving a SIM into another handset.",
+    "symptoms": [
+      "status bar shows SOS only",
+      "outbound calls fail",
+      "mobile data is unavailable",
+      "SIM works in the old phone but not the new phone"
+    ],
+    "common_causes": [
+      "device is carrier locked",
+      "old eSIM profile is still active",
+      "IMEI is not fully provisioned on the line",
+      "network settings are stale after the swap"
+    ],
+    "resolution_steps": [
+      "Confirm the handset is unlocked and supports the carrier bands.",
+      "Restart the phone, then toggle airplane mode for 30 seconds.",
+      "If the device used eSIM before, delete inactive or duplicate cellular plans.",
+      "Reset network settings and reinsert the SIM after the reset completes.",
+      "If service does not return within 15 minutes, reprovision the line and verify the IMEI on the account."
+    ],
+    "escalation_policy": "Escalate to network provisioning if SOS only continues after reprovisioning and lock status has been confirmed.",
+    "keywords": [
+      "SOS only",
+      "Emergency Calls Only",
+      "SIM swap",
+      "new phone activation",
+      "IMEI update"
+    ],
+    "related_articles": [
+      "Activate eSIM on iPhone with QR code",
+      "5G icon missing even though coverage is available"
+    ],
+    "updated_at": "2026-03-18"
+  },
+  {
+    "title": "5G icon missing even though coverage is available",
+    "article_id": "TEL-MOB-002",
+    "category": "mobile-network",
+    "product": "consumer wireless",
+    "summary": "Use this article when a customer expects 5G service but the device stays on LTE or 4G in an area marked as 5G coverage.",
+    "symptoms": [
+      "customer sees LTE instead of 5G",
+      "speed tests are slower than expected",
+      "other devices nearby show 5G on the same carrier"
+    ],
+    "common_causes": [
+      "plan does not include 5G access",
+      "SIM card is too old for 5G provisioning",
+      "preferred network type is set to LTE only",
+      "local site is capacity constrained and falls back to LTE"
+    ],
+    "resolution_steps": [
+      "Verify the line is on a 5G-capable plan and the handset model supports the required bands.",
+      "Check the preferred network mode and change it to 5G Auto or NR/LTE.",
+      "Refresh network provisioning and confirm the SIM was issued within the last three years.",
+      "Run a coverage check for outages or site maintenance in the serving area.",
+      "If all checks pass, recommend a SIM replacement or eSIM reprovisioning."
+    ],
+    "escalation_policy": "Escalate to radio access network support only after plan eligibility, handset support, and provisioning have been validated.",
+    "keywords": [
+      "5G not working",
+      "LTE only",
+      "network mode",
+      "SIM replacement",
+      "coverage issue"
+    ],
+    "related_articles": [
+      "Phone shows SOS only after SIM swap",
+      "International roaming enabled but data will not connect"
+    ],
+    "updated_at": "2026-02-27"
+  },
+  {
+    "title": "Wi-Fi calling unavailable after handset upgrade",
+    "article_id": "TEL-MOB-003",
+    "category": "mobile-network",
+    "product": "consumer wireless",
+    "summary": "Restore Wi-Fi calling after a device upgrade, especially when voice over LTE works but Wi-Fi calling cannot be enabled or registered.",
+    "symptoms": [
+      "Wi-Fi Calling toggle is missing or disabled",
+      "calls drop indoors with poor cellular signal",
+      "customer gets an address verification error"
+    ],
+    "common_causes": [
+      "E911 address was not accepted",
+      "device IMEI registration is incomplete",
+      "carrier settings bundle is outdated",
+      "VPN or firewall blocks IPSec or IMS traffic"
+    ],
+    "resolution_steps": [
+      "Confirm the device model supports carrier Wi-Fi calling and has the latest OS update.",
+      "Update the emergency address on the account and have the customer accept the Wi-Fi calling terms again.",
+      "Disable VPN, connect to a different Wi-Fi network, and retry registration.",
+      "Refresh the line features, restart the phone, and test with airplane mode on plus Wi-Fi enabled.",
+      "If the toggle is still missing, reset network settings and reinstall the eSIM if present."
+    ],
+    "escalation_policy": "Escalate to IMS support if Wi-Fi calling registration fails on multiple networks after address validation and feature refresh.",
+    "keywords": [
+      "Wi-Fi calling",
+      "E911 address",
+      "IMS registration",
+      "handset upgrade",
+      "indoor coverage"
+    ],
+    "related_articles": [
+      "5G icon missing even though coverage is available",
+      "Phone shows SOS only after SIM swap"
+    ],
+    "updated_at": "2026-01-22"
+  },
+  {
+    "title": "International roaming enabled but data will not connect",
+    "article_id": "TEL-MOB-004",
+    "category": "mobile-network",
+    "product": "consumer wireless",
+    "summary": "Resolve cases where voice roaming works abroad but mobile data stays disconnected or a customer cannot attach to a partner network.",
+    "symptoms": [
+      "calls work but data does not",
+      "device shows bars but no internet",
+      "manual network selection lists several roaming partners"
+    ],
+    "common_causes": [
+      "data roaming is disabled on the device",
+      "the roaming pass is missing or expired",
+      "APN settings were overwritten by a local SIM",
+      "the current partner network does not support LTE data for the plan"
+    ],
+    "resolution_steps": [
+      "Confirm international roaming and roaming data passes are active on the line.",
+      "Enable data roaming in the device settings and reboot once.",
+      "Reset APN values to the carrier defaults and remove any manually entered proxy settings.",
+      "Try manual network selection using a preferred roaming partner from the coverage tool.",
+      "If service still fails, collect location, visited network, and timestamp for roaming partner escalation."
+    ],
+    "escalation_policy": "Escalate to international roaming operations when multiple partner networks fail after APN reset and pass verification.",
+    "keywords": [
+      "roaming data",
+      "travel pass",
+      "APN reset",
+      "manual network selection",
+      "international travel"
+    ],
+    "related_articles": [
+      "5G icon missing even though coverage is available",
+      "Voicemail PIN reset for mobile subscribers"
+    ],
+    "updated_at": "2026-03-04"
+  }
+]
