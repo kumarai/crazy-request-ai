@@ -31,3 +31,6 @@ celerybeat-schedule*
 # Build
 *.egg
 *.whl
+
+# Claude Code local settings
+.claude/settings.json
