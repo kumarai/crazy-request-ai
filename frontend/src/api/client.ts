@@ -70,10 +70,7 @@ export const getSourceStatus = (id: string) => request<Job>(`/sources/${id}/stat
 
 // List indexed chunks for a source — shows embed_input so users can debug
 // retrieval quality by seeing exactly what the embedder produced.
-export const listSourceChunks = (
-  sourceId: string,
-  opts: { limit?: number; q?: string } = {},
-) => {
+export const listSourceChunks = (sourceId: string, opts: { limit?: number; q?: string } = {}) => {
   const p = new URLSearchParams()
   if (opts.limit) p.set("limit", String(opts.limit))
   if (opts.q) p.set("q", opts.q)
@@ -137,43 +134,87 @@ export interface ActionClickResponse {
   label: string
 }
 
-export const postActionClick = (
-  conversationId: string,
-  customerId: string,
-  topic: string,
-) =>
-  request<ActionClickResponse>(
-    `/support/conversations/${conversationId}/action_click`,
-    {
-      method: "POST",
-      headers: { "X-Customer-Id": customerId },
-      body: JSON.stringify({ topic }),
-    },
-  )
+export const postActionClick = (conversationId: string, customerId: string, topic: string) =>
+  request<ActionClickResponse>(`/support/conversations/${conversationId}/action_click`, {
+    method: "POST",
+    headers: { "X-Customer-Id": customerId },
+    body: JSON.stringify({ topic }),
+  })
 
 // Running token + USD totals for an entire support conversation. UI calls
 // this after each ``done`` event to refresh the conversation-level badge.
-export const getConversationTotals = (
-  conversationId: string,
-  customerId: string,
-) =>
-  request<ConversationTotals>(
-    `/support/conversations/${conversationId}/totals`,
-    { headers: { "X-Customer-Id": customerId } },
-  )
+export const getConversationTotals = (conversationId: string, customerId: string) =>
+  request<ConversationTotals>(`/support/conversations/${conversationId}/totals`, {
+    headers: { "X-Customer-Id": customerId },
+  })
 
 export const listConversations = (customerId: string, limit = 50) =>
-  request<ConversationSummary[]>(
-    `/support/conversations?limit=${limit}`,
-    { headers: { "X-Customer-Id": customerId } },
-  )
+  request<ConversationSummary[]>(`/support/conversations?limit=${limit}`, {
+    headers: { "X-Customer-Id": customerId },
+  })
 
-export const getConversationMessages = (
-  conversationId: string,
-  customerId: string,
-  limit = 200,
+export const getConversationMessages = (conversationId: string, customerId: string, limit = 200) =>
+  request<StoredMessage[]>(`/support/conversations/${conversationId}/messages?limit=${limit}`, {
+    headers: { "X-Customer-Id": customerId },
+  })
+
+// Debug — parallel multi-agent trace
+export interface DebugTraceSource {
+  id: string
+  qualified_name: string
+  file_path: string
+  source_type: string
+  source_name: string
+  score: number
+  summary: string
+  purpose: string
+  reuse_signal: string
+}
+
+export interface DebugTraceToolCall {
+  name: string
+  input?: Record<string, unknown> | null
+  output?: unknown
+}
+
+export interface DebugTraceNode {
+  id: string
+  kind: "decomposer" | "specialist" | "synthesizer"
+  specialist?: string | null
+  sub_query?: string | null
+  rationale?: string | null
+  output_text?: string | null
+  sources: DebugTraceSource[]
+  tool_calls: DebugTraceToolCall[]
+  timing_ms: number
+  status: "ok" | "auth_skipped" | "error"
+  error?: string | null
+}
+
+export interface DebugTraceEdge {
+  from_id: string
+  to_id: string
+}
+
+export interface DebugTrace {
+  query: string
+  nodes: DebugTraceNode[]
+  edges: DebugTraceEdge[]
+  final_answer: string
+  total_latency_ms: number
+  total_cost_usd: number | null
+}
+
+export const postDebugQuery = (
+  query: string,
+  opts: { customerId?: string; sourceIds?: string[]; provider?: string } = {},
 ) =>
-  request<StoredMessage[]>(
-    `/support/conversations/${conversationId}/messages?limit=${limit}`,
-    { headers: { "X-Customer-Id": customerId } },
-  )
+  request<DebugTrace>("/debug/query", {
+    method: "POST",
+    body: JSON.stringify({
+      query,
+      customer_id: opts.customerId,
+      source_ids: opts.sourceIds,
+      provider: opts.provider,
+    }),
+  })

@@ -582,7 +582,7 @@ Each SSE event type maps to a renderer case in
 ```
 thinking               ─► THINKING bar with stage message
 sources                ─► Collapsible <details> with N chunks
-code                   ─► Code block (dev-chat feature, rarely in support)
+code                   ─► Code block (rarely used)
 wiki                   ─► External link
 text                   ─► Accumulated text buffer (streamed, smooth)
 specialist_info        ─► Badge + confidence %

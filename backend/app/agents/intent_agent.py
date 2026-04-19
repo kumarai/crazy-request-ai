@@ -21,8 +21,8 @@ Intents (handled per-domain by the calling orchestrator):
   Caller streams a warm short reply via ``smalltalk_agent``.
 - ``off_topic``: real question but outside the assistant's scope (weather,
   sports, jokes, general knowledge, recipes). Caller streams a gentle
-  "I can't help with that, but I can help with X" via the domain's
-  off-topic agent (``support_off_topic_agent``, ``devchat_off_topic_agent``).
+  "I can't help with that, but I can help with X" via
+  ``support_off_topic_agent``.
 - ``capabilities``: meta question about what the assistant can do
   ("what can you help with?", "what are your capabilities?"). Caller
   streams a static capabilities summary — no LLM, no retrieval — so
@@ -32,10 +32,7 @@ Intents (handled per-domain by the calling orchestrator):
   ("summarize our chat", "recap what we discussed"). Caller loads the
   chat history and streams a summary via ``summarize_agent`` — no
   retrieval, the history itself is the grounding.
-- ``support``: in-scope question. Caller runs the full RAG pipeline. Note
-  that "support" here means "in-scope for this assistant" — for the
-  devchat orchestrator that means "answer with the indexed knowledge
-  base", not customer support.
+- ``support``: in-scope question. Caller runs the full RAG pipeline.
 
 Languages:
 - ``en``: English (default).

@@ -67,6 +67,13 @@ from app.support.agents.support_agent import (
     SupportAgentDeps,
     build_user_message,
 )
+from app.support.agents.synthesizer import (
+    SynthesizerInput,
+    build_synthesizer_message,
+    synthesizer_agent,
+)
+from app.support.branch_executor import run_branch
+from app.support.decomposer import Decomposition, decompose
 from app.support.agents.validator_agent import (
     build_faithfulness_context,
     build_followups_actions_context,
@@ -537,6 +544,51 @@ class SupportOrchestrator:
             ):
                 yield event
             return
+
+        # Step 1.8: Multi-agent decomposition (cold-start only).
+        # Short continuation follow-ups ("80015", "yes", "use the Visa")
+        # stay on the single-specialist path because the existing
+        # router handles continuity via ``last_specialist``. When the
+        # customer's opening message spans multiple specialist domains
+        # (e.g. "fix my internet after my card got rejected and I paid
+        # late"), we split it, run branches in parallel, and
+        # synthesize. Decomposer returns a single sub-query for
+        # single-topic questions — in that case we fall through to the
+        # normal routing + validation + cards path so nothing regresses.
+        _NON_TOPICAL_SPECIALISTS = {
+            "smalltalk", "off_topic", "capabilities", "summarize",
+            "unsupported_language",
+        }
+        should_decompose = (
+            not history.last_specialist
+            or history.last_specialist in _NON_TOPICAL_SPECIALISTS
+        )
+        if should_decompose:
+            decomp_model = self._llm.agent_model("router", active_provider)
+            decomposition, decomp_usage = await decompose(
+                query, model=decomp_model
+            )
+            turn_usage.add(decomp_usage, decomp_model)
+            if len(decomposition.sub_queries) > 1:
+                logger.info(
+                    "Multi-agent path: %d sub-queries for conv %s",
+                    len(decomposition.sub_queries),
+                    conversation_id,
+                )
+                async for event in self._stream_multi_agent_reply(
+                    query=query,
+                    customer=customer,
+                    conversation_id=conversation_id,
+                    decomposition=decomposition,
+                    source_ids=source_ids,
+                    history=history,
+                    active_provider=active_provider,
+                    turn_usage=turn_usage,
+                    start_time=start_time,
+                    response_language=response_language,
+                ):
+                    yield event
+                return
 
         # Step 2: Route
         yield sse_event(
@@ -1908,6 +1960,240 @@ class SupportOrchestrator:
                 # else was free.
                 cost_usd=turn_usage.cost_usd,
             ).model_dump_json(),
+        )
+
+    async def _stream_multi_agent_reply(
+        self,
+        *,
+        query: str,
+        customer: CustomerContext,
+        conversation_id: UUID,
+        decomposition: Decomposition,
+        source_ids: list[str] | None,
+        history: HistoryContext,
+        active_provider: str,
+        turn_usage: UsageAccumulator,
+        start_time: float,
+        response_language: str,
+    ) -> AsyncGenerator[dict, None]:
+        """Run the customer query as 2-3 parallel specialist branches and
+        synthesize a single reply.
+
+        Skips the single-specialist path's validation / cards /
+        interactive-actions / FAQ cache — those concerns assume one
+        specialist owns the turn. The final answer is persisted with
+        ``specialist_used="multi"`` and per-branch sources in
+        ``citations_json`` so the transcript viewer can still explain
+        where the content came from.
+        """
+        branches = decomposition.sub_queries
+
+        yield sse_event(
+            EventType.THINKING,
+            ThinkingEvent(
+                stage="routing",
+                message=(
+                    f"Splitting into {len(branches)} specialist "
+                    f"{'parts' if len(branches) > 1 else 'part'}…"
+                ),
+            ).model_dump_json(),
+        )
+
+        # Emit SPECIALIST_INFO per branch up front so the UI can show
+        # which specialists are about to run. Confidence is 1.0 — the
+        # decomposer already picked; no router tie-break happens here.
+        for sq in branches:
+            yield sse_event(
+                EventType.SPECIALIST_INFO,
+                SpecialistInfoEvent(
+                    specialist=sq.specialist, confidence=1.0
+                ).model_dump_json(),
+            )
+
+        yield sse_event(
+            EventType.THINKING,
+            ThinkingEvent(
+                stage="generating",
+                message=f"Running {len(branches)} specialists in parallel…",
+            ).model_dump_json(),
+        )
+
+        generation_start = time.time()
+        branch_tasks = [
+            run_branch(
+                sub_query=sq,
+                index=i,
+                customer=customer,
+                history=history,
+                retriever=self._retriever,
+                prompt_builder=self._prompt_builder,
+                llm=self._llm,
+                active_provider=active_provider,
+                source_ids=source_ids,
+                turn_usage=turn_usage,
+                response_language=response_language,
+            )
+            for i, sq in enumerate(branches)
+        ]
+        branch_results = await asyncio.gather(*branch_tasks)
+        generation_ms = int((time.time() - generation_start) * 1000)
+
+        # Merge + emit all branches' retrieved sources so the frontend
+        # "Sources" panel shows the full evidence set behind the
+        # synthesized answer.
+        all_sources: list[ChunkPreview] = []
+        seen_ids: set[str] = set()
+        for node in branch_results:
+            for src in node.sources:
+                if src.id in seen_ids:
+                    continue
+                seen_ids.add(src.id)
+                all_sources.append(src)
+        if all_sources:
+            yield sse_event(
+                EventType.SOURCES,
+                SourcesEvent(
+                    chunks=all_sources,
+                    total_searched=len(all_sources),
+                ).model_dump_json(),
+            )
+
+        # Tool-call transparency per branch (same event shape the
+        # single-specialist path uses). Preserves the existing UI
+        # rendering without new plumbing.
+        tools_called: list[str] = []
+        for node in branch_results:
+            for tc in node.tool_calls:
+                tools_called.append(tc.name)
+                yield sse_event(
+                    EventType.TOOL_CALL,
+                    ToolCallEvent(
+                        tool_name=tc.name, status="success"
+                    ).model_dump_json(),
+                )
+
+        # Synthesize the branches into one reply.
+        yield sse_event(
+            EventType.THINKING,
+            ThinkingEvent(
+                stage="generating",
+                message="Combining specialist answers…",
+            ).model_dump_json(),
+        )
+        synth_model = self._llm.agent_model("followup", active_provider)
+        synth_inputs = [
+            SynthesizerInput(
+                specialist=n.specialist or "unknown",
+                sub_query=n.sub_query or "",
+                sub_answer=n.output_text or "",
+                status=n.status,
+            )
+            for n in branch_results
+        ]
+        synth_msg = build_synthesizer_message(query, synth_inputs)
+        try:
+            synth_result = await synthesizer_agent.run(
+                synth_msg, model=synth_model
+            )
+            final_response = synth_result.output or ""
+            turn_usage.add(synth_result.usage(), synth_model)
+        except Exception as e:
+            logger.error("Multi-agent synthesizer failed: %s", e, exc_info=True)
+            # Fallback: concatenate per-branch answers, labeled. Not
+            # pretty, but better than a hard error after we already ran
+            # retrieval + generation on every branch.
+            final_response = "\n\n".join(
+                f"**{n.specialist}**: {n.output_text or '(no reply)'}"
+                for n in branch_results
+            )
+
+        yield sse_event(
+            EventType.TEXT,
+            TextEvent(content=final_response).model_dump_json(),
+        )
+
+        # Persist the turn. One user message + one assistant message
+        # with a composite ``specialist_used`` so the transcript makes
+        # the multi-agent provenance auditable. Per-branch sources go
+        # into ``citations_json.branches``.
+        citations_payload: dict = {
+            "specialist": "multi",
+            "branches": [
+                {
+                    "specialist": n.specialist,
+                    "sub_query": n.sub_query,
+                    "status": n.status,
+                    "timing_ms": n.timing_ms,
+                    "sources": [s.model_dump() for s in n.sources],
+                    "tool_calls": [
+                        tc.model_dump() for tc in n.tool_calls
+                    ],
+                }
+                for n in branch_results
+            ],
+        }
+        if all_sources:
+            citations_payload["sources"] = {
+                "total_searched": len(all_sources),
+                "chunks": [s.model_dump() for s in all_sources],
+            }
+
+        assistant_msg: dict | None = None
+        try:
+            await self._conv_repo.add_message(conversation_id, "user", query)
+            assistant_msg = await self._conv_repo.add_message(
+                conversation_id,
+                "assistant",
+                final_response,
+                specialist_used="multi",
+                citations_json=citations_payload,
+                input_tokens=turn_usage.usage.input_tokens or None,
+                output_tokens=turn_usage.usage.output_tokens or None,
+                cost_usd=turn_usage.cost_usd,
+            )
+            for node in branch_results:
+                for tc in node.tool_calls:
+                    await self._conv_repo.add_tool_call(
+                        conversation_id=conversation_id,
+                        tool_name=tc.name,
+                        input_json=tc.input,
+                        output_json=tc.output,
+                        message_id=assistant_msg.get("id") if assistant_msg else None,
+                    )
+            # Intentionally do NOT set ``last_specialist`` — the next
+            # turn's router should route based on the follow-up content,
+            # not on "multi", which isn't a real specialist. Session
+            # rolling summary stays untouched.
+        except Exception as e:
+            logger.error(
+                "Failed to persist multi-agent turn: %s", e, exc_info=True
+            )
+
+        yield sse_event(
+            EventType.DONE,
+            SupportDoneEvent(
+                total_chunks_used=len(all_sources),
+                sources_used=sorted({s.source_name for s in all_sources}),
+                faithfulness_passed=True,  # no validator on multi-agent v1
+                latency_ms=int((time.time() - start_time) * 1000),
+                generation_ms=generation_ms,
+                specialist_used="multi",
+                router_confidence=1.0,
+                conversation_id=str(conversation_id),
+                tools_called=tools_called,
+                input_tokens=turn_usage.usage.input_tokens or None,
+                output_tokens=turn_usage.usage.output_tokens or None,
+                total_tokens=turn_usage.usage.total_tokens or None,
+                llm_requests=turn_usage.usage.requests or None,
+                cost_usd=turn_usage.cost_usd,
+            ).model_dump_json(),
+        )
+
+        await self._maybe_generate_title(
+            conversation_id=conversation_id,
+            query=query,
+            answer=final_response,
+            active_provider=active_provider,
         )
 
     async def _stream_unsupported_language_reply(

@@ -45,16 +45,6 @@ export interface Job {
   stats: JobStats & Record<string, unknown>
 }
 
-export interface QueryRequest {
-  query: string
-  language?: string
-  source_ids?: string[]
-  top_k?: number
-  include_wiki?: boolean
-  include_code?: boolean
-  provider?: string
-}
-
 // SSE event payloads
 export interface ThinkingEvent {
   type: "thinking"

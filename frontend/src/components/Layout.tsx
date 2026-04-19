@@ -9,8 +9,8 @@ import { useAuthStore } from "@/store/authStore"
 import { cn } from "@/lib/utils"
 
 const NAV = [
-  { to: "/devchat", label: "Dev Chat" },
   { to: "/support", label: "Support Chat" },
+  { to: "/debug", label: "Debug (Graph)" },
   { to: "/sources", label: "Sources" },
   { to: "/credentials", label: "Credentials" },
   { to: "/jobs", label: "Jobs" },

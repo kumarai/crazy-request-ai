@@ -18,9 +18,9 @@ from app.api.routes.support_actions import router as support_actions_router
 from app.api.routes.support_cost import router as support_cost_router
 from app.api.routes.chunks import router as chunks_router
 from app.api.routes.credentials import router as credentials_router
+from app.api.routes.debug import router as debug_router
 from app.api.routes.health import router as health_router
 from app.api.routes.jobs import router as jobs_router
-from app.api.routes.devchat import router as devchat_router
 from app.api.routes.settings import router as settings_router
 from app.api.routes.sources import router as sources_router
 from app.api.routes.support import router as support_router
@@ -145,7 +145,6 @@ def create_app() -> FastAPI:
 
     # Routes
     app.include_router(health_router, prefix="/v1", tags=["Health"])
-    app.include_router(devchat_router, prefix="/v1", tags=["DevChat"])
     app.include_router(sources_router, prefix="/v1", tags=["Sources"])
     app.include_router(credentials_router, prefix="/v1", tags=["Credentials"])
     app.include_router(chunks_router, prefix="/v1", tags=["Debug"])
@@ -156,6 +155,7 @@ def create_app() -> FastAPI:
     app.include_router(support_actions_router, prefix="/v1", tags=["Support"])
     app.include_router(support_cost_router, prefix="/v1", tags=["Support"])
     app.include_router(auth_router, prefix="/v1", tags=["Auth"])
+    app.include_router(debug_router, prefix="/v1", tags=["Debug"])
 
     return app
 

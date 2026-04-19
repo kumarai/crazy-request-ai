@@ -14,8 +14,6 @@ pass. This module just owns:
 - ``UNSUPPORTED_LANGUAGE_REPLY`` — canned bilingual rejection used
   when the intent classifier returns ``language="unsupported"``. No
   LLM call, zero tokens consumed.
-
-Scoped to customer support — devchat is English-only.
 """
 from __future__ import annotations
 

@@ -1,9 +1,8 @@
 import { fetchEventSource } from "@microsoft/fetch-event-source"
 import { useAuthStore } from "@/store/authStore"
-import type { QueryRequest, SSEEvent } from "./types"
+import type { SSEEvent } from "./types"
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000"
-const DEVCHAT_URL = `${API_BASE}/v1/devchat/query`
 const SUPPORT_URL = `${API_BASE}/v1/support/query`
 
 export interface SSECallbacks {
@@ -79,13 +78,6 @@ const streamSSE = (
 
   return ctrl
 }
-
-// Developer-RAG (devchat) endpoint — stateless, no conversation history,
-// no customer identity.
-export const streamDevChat = (
-  body: QueryRequest,
-  callbacks: SSECallbacks,
-): AbortController => streamSSE({ url: DEVCHAT_URL, body }, callbacks)
 
 export interface SupportQueryRequest {
   query: string

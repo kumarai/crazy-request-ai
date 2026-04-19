@@ -4,9 +4,8 @@ Used when the intent classifier flags a message as smalltalk (greeting,
 thanks, goodbye, ack, chitchat). Skips retrieval and any validation —
 the goal is a short, warm reply.
 
-Domain-neutral: every orchestrator (devchat, support) shares this same
-agent. The off-topic agents stay per-domain because their redirect copy
-is scope-specific, but a friendly "hi back" reads the same everywhere.
+Used by the support orchestrator for a friendly "hi back" reply
+without invoking retrieval or validation.
 """
 from __future__ import annotations
 
