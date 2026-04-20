@@ -11,11 +11,12 @@ services:
 
   web:
     build: ./backend
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir /app/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir
+      /app/app
     environment:
       WATCHFILES_FORCE_POLLING: "true"
       MCP_SERVER_URL: "http://mcp-server:8765/mcp"
-    ports: ["8000:8000"]
+    ports: [ "8000:8000" ]
     volumes:
       - ./backend:/app
       - ./sample-data:/data:ro
@@ -42,7 +43,7 @@ services:
       MCP_PORT: "8765"
       MCP_SEED: "true"
       MCP_LOG_LEVEL: "INFO"
-    ports: ["8765:8765"]
+    ports: [ "8765:8765" ]
     volumes:
       - mcp_data:/data/mcp
       - ./backend:/app
@@ -51,19 +52,21 @@ services:
   frontend:
     image: node:20-alpine
     working_dir: /app
-    command: sh -c "corepack enable && yarn install --frozen-lockfile && yarn dev --host 0.0.0.0 --port 3000"
+    command: sh -c "corepack enable && yarn install --frozen-lockfile && yarn dev
+      --host 0.0.0.0 --port 3000"
     environment:
       CHOKIDAR_USEPOLLING: "true"
-    ports: ["3000:3000"]
+    ports: [ "3000:3000" ]
     volumes:
       - ./frontend:/app
       - frontend_node_modules:/app/node_modules
-    depends_on: [web]
+    depends_on: [ web ]
     restart: unless-stopped
 
   celery-worker:
     build: ./backend
-    command: celery -A app.tasks.celery_app worker -Q indexing,default -c 4 --loglevel=info
+    command: celery -A app.tasks.celery_app worker -Q indexing,default -c 4
+      --loglevel=info
     volumes:
       - ./backend:/app
       - ./sample-data:/data:ro
@@ -96,10 +99,10 @@ services:
   flower:
     build: ./backend
     command: celery -A app.tasks.celery_app flower --port=5555
-    ports: ["5555:5555"]
+    ports: [ "5555:5555" ]
     volumes:
       - ./backend:/app
-    depends_on: [redis]
+    depends_on: [ redis ]
     restart: unless-stopped
 
   postgres:
@@ -108,9 +111,9 @@ services:
       POSTGRES_DB: devknowledge
       POSTGRES_USER: app
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
-    volumes: [pgdata:/var/lib/postgresql/data]
+    volumes: [ pgdata:/var/lib/postgresql/data ]
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U app -d devknowledge"]
+      test: [ "CMD-SHELL", "pg_isready -U app -d devknowledge" ]
       interval: 5s
       timeout: 5s
       retries: 12
@@ -120,41 +123,8 @@ services:
   redis:
     image: redis:7-alpine
     command: redis-server --appendonly yes
-    volumes: [redisdata:/data]
+    volumes: [ redisdata:/data ]
     restart: unless-stopped
-
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-      MINIO_CORS_ALLOW_ORIGIN: "*"
-    ports:
-      - "9000:9000"                             # API
-      - "9001:9001"                             # Console UI
-    volumes: [minio_data:/data]
-    healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    restart: unless-stopped
-
-  # Optional: uncomment to run Ollama locally for free LLM testing.
-  # After starting, pull models:
-  #   docker compose exec ollama ollama pull llama3.1:8b
-  #   docker compose exec ollama ollama pull nomic-embed-text-v2-moe
-  # Then set in config.toml:
-  #   llm_provider = "ollama"
-  #   ollama_base_url = "http://ollama:11434/v1"
-  #   llm_embedding_dimensions = 768
-  ollama:
-    image: ollama/ollama:latest
-    ports: ["11434:11434"]
-    volumes: [ollama_data:/root/.ollama]
-    restart: unless-stopped
-    profiles: [ollama]                          # only starts with: docker compose --profile ollama up
 
 volumes:
   frontend_node_modules:
